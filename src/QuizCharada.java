@@ -19,6 +19,7 @@ public class QuizCharada extends JFrame implements ActionListener {
     JRadioButton opt1, opt2, opt3, opt4;
     private JButton voltarMenu = new JButton("Menu");
     private JPanel painel;
+    private JLabel questaoNumero;
 
     //JLabel qno;
     JTextArea questao;
@@ -47,6 +48,12 @@ public class QuizCharada extends JFrame implements ActionListener {
         setSize(750, 600);
         setLocationRelativeTo(null);
         getContentPane().setLayout(null);
+
+        questaoNumero = new JLabel("1/10");
+        questaoNumero.setFont(new Font("Arial", Font.BOLD, 16));
+        questaoNumero.setForeground(BLUE); // Set text color
+        questaoNumero.setBounds(350, 30, 100, 30);
+        painel.add(questaoNumero);
 
         proximo = new JButton("Próximo");
         proximo.setBounds(70, 400, 150, 50);
@@ -260,6 +267,8 @@ public class QuizCharada extends JFrame implements ActionListener {
 
         grupoOpcoes.clearSelection();
 
+        questaoNumero.setText((count + 1) + "/10");
+
         setVisible(true);
     }
     public void actionPerformed(ActionEvent e) {
@@ -301,11 +310,11 @@ public class QuizCharada extends JFrame implements ActionListener {
                     pontuacao += 10;
                 }
             }
-            if (pontuacao < 7) {
+            if (pontuacao >= 7) {
                 reproduzirSons("/sons/vitoriaFinal.wav");
                 JOptionPane.showMessageDialog(this, "Sua pontuação final é: " + pontuacao + " de 100");
             }
-            if (pontuacao >= 7) {
+            else {
                 reproduzirSons("/sons/perdaFinal.wav");
                 JOptionPane.showMessageDialog(this, "Sua pontuação final é: " + pontuacao + " de 100");
             }

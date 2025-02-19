@@ -20,7 +20,8 @@ public class Charada extends JFrame {
     private int indicePergunta = 0;
     private JLabel chances;
     private JButton voltarMenu = new JButton("Voltar ao Menu");
-    private int pontuacaoTotal = 0; // Variável para armazenar a pontuação total
+    private int pontuacaoTotal = 0;
+    private JLabel numeroQuestaoLabel;
 
     private String[][] perguntas = {
             {"\"Sou rápida, mas não guardo segredos por muito tempo.\n" +
@@ -55,7 +56,7 @@ public class Charada extends JFrame {
                     "Quem sou eu?\"", "ssd", "ssd.jpg"},
             {"\"Tenho um olho eletrônico que transforma números em cores.\n" +
                     "Se quiser jogar ou criar, sem mim, não há valores.\n" +
-                    "Quem sou eu?\"", "placa de video", "placaVide.jpeg"}
+                    "Quem sou eu?\"", "placa de video", "placaVideo.jpg"}
     };
 
     public Charada() {
@@ -73,9 +74,14 @@ public class Charada extends JFrame {
                 g.drawImage(imgFundo.getImage(), 0, 0, getWidth(), getHeight(), this);
             }
         };
+
+        numeroQuestaoLabel = new JLabel("Charada 1/10");
+        numeroQuestaoLabel.setFont(new Font("Arial", Font.BOLD, 16));
+        numeroQuestaoLabel.setForeground(Color.BLACK);
+        numeroQuestaoLabel.setBounds(350, 20, 100, 30);
+
         panelPergunta.setPreferredSize(new Dimension(800, 400));
         panelPergunta.setLayout(new BorderLayout(340, 200));
-        panelPergunta.setPreferredSize(new Dimension(800, 300));
 
         perguntaTextArea = new JTextArea(perguntas[indicePergunta][0]);
         perguntaTextArea.setFont(new Font("Arial", Font.BOLD, 18));
@@ -128,6 +134,7 @@ public class Charada extends JFrame {
         panelRespostas.add(campoResposta);
         panelRespostas.add(btnResponder);
         panelRespostas.add(voltarMenu);
+        panelPergunta.add(numeroQuestaoLabel);
         setVisible(true);
     }
 
@@ -191,6 +198,7 @@ public class Charada extends JFrame {
         indicePergunta++;
 
         if (indicePergunta < perguntas.length) {
+            numeroQuestaoLabel.setText("Charada " + (indicePergunta + 1) + "/" + perguntas.length);
             perguntaTextArea.setText(perguntas[indicePergunta][0]);
             panelPergunta.repaint();
             campoResposta.setText("");

@@ -106,7 +106,7 @@ public class Menu extends JFrame {
             JOptionPane.showMessageDialog(null,
                     "Bem-vindo ao jogo da memória!\n\n" +
                             "Selecione 'Hardwares Externos' nível 1 ou 'Hardwares Internos' nível 2 para começar.\n" +
-                            "Você terá 5 min para decorar as cartas\n quando terminar tente as charadas para testar seus conhecimentos.", "Ajuda", JOptionPane.INFORMATION_MESSAGE);
+                            "Você terá 5 min para decorar as cartas, quando terminar tente as charadas para testar seus conhecimentos.", "Ajuda", JOptionPane.INFORMATION_MESSAGE);
         });
 
         sair.addActionListener(e -> {

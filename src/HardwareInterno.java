@@ -68,12 +68,10 @@ public class HardwareInterno extends JFrame {
         configurarExplicacoes();
 
         janela.setLayout(new BorderLayout());
-        //janela.setSize(largura, altura);
-        //janela.setLocationRelativeTo(null);
-        janela.setBounds(300, 0, largura, altura);
+        janela.setBounds(300, 20, largura, altura);
         janela.setResizable(false);
         janela.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        // janela.setAlwaysOnTop(true); // Remova esta linha
+
 
         texto.setFont(new Font("Arial", Font.PLAIN, 20));
         texto.setHorizontalAlignment(JLabel.CENTER);
@@ -257,10 +255,10 @@ public class HardwareInterno extends JFrame {
 
     void configurarExplicacoes() {
         explicacao.put("Processador", "O processador, ou CPU (Unidade Central de Processamento),\né o componente responsável por executar as instruções de um computador.\n Ele interpreta e processa dados, coordenando as\n operações do sistema.");
-        explicacao.put("MemoriaRAM", "A memória RAM (Random Access Memory) é responsável por\n armazenar temporariamente os dados e instruções que\n o processador precisa acessar rapidamente\n enquanto o computador está ligado.");
+        explicacao.put("MemoriaRam", "A memória RAM (Random Access Memory) é responsável por\n armazenar temporariamente os dados e instruções que\n o processador precisa acessar rapidamente\n enquanto o computador está ligado.");
         explicacao.put("PlacaDeVideo", "A placa de vídeo, ou GPU (Unidade de Processamento Gráfico),\n é responsável pelo processamento e exibição de imagens, gráficos\n e vídeos na tela do computador.");
         explicacao.put("FonteDeAlimentação", "A fonte de alimentação tem a função de converter\na energia elétrica da tomada (corrente alternada - AC)\n em uma forma utilizável pelos componentes do computador\n (corrente contínua - DC).");
-        explicacao.put("SSD", "O SSD (Solid State Drive) é um dispositivo de\n armazenamento que utiliza memória flash para guardar dados,\n substituindo os discos rígidos tradicionais (HDD).");
+        explicacao.put("ssd", "O SSD (Solid State Drive) é um dispositivo de\n armazenamento que utiliza memória flash para guardar dados,\n substituindo os discos rígidos tradicionais (HDD).");
         explicacao.put("Cooler", "O cooler é um componente de resfriamento usado\n para controlar a temperatura interna dos dispositivos\n eletrônicos, como computadores, evitando que o\n excesso de calor danifique os componentes.");
         explicacao.put("DissipadoresDeCalor", "Os dissipadores de calor são componentes passivos\n utilizados para reduzir a temperatura de outros dispositivos\n eletrônicos, como processadores (CPUs), placas de vídeo (GPUs)\n e outros componentes que geram calor durante o funcionamento.");
         explicacao.put("Placa-Mae", "A placa-mãe (ou motherboard) é o principal componente\n do computador, responsável por conectar e integrar todos\n os outros componentes, permitindo a comunicação entre eles.\n Ela serve como a \"espinha dorsal\" do sistema.");
