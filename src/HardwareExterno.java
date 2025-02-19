@@ -1,7 +1,6 @@
 import java.awt.*;
 import java.awt.event.*;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
@@ -232,17 +231,34 @@ public class HardwareExterno extends JFrame{
 
     void configuracoesCartao() {
         conjuntoDeCartas = new ArrayList<>();
+        for (String nomeCarta : ListaDeCartas) {
+            String caminhoImagem = "/imgHardExternos/" + nomeCarta + ".png";
+            java.net.URL resourceUrl = getClass().getResource(caminhoImagem);
 
-        Arrays.stream(ListaDeCartas).forEach(nomeCarta -> {
-            Image cartaImg = new ImageIcon(Objects.requireNonNull(getClass().getResource("imgHardExternos/" + nomeCarta + ".png"))).getImage();
-            ImageIcon imgCartaIcone = new ImageIcon(cartaImg.getScaledInstance(larguraCartao, alturaCartao, Image.SCALE_SMOOTH));
-            Cartas carta = new Cartas(nomeCarta, imgCartaIcone);
-            conjuntoDeCartas.add(carta);
+            if (resourceUrl == null) {
+                JOptionPane.showMessageDialog(null, "Imagem não encontrada: " + nomeCarta, "Erro", JOptionPane.ERROR_MESSAGE);
+                System.exit(1); // Encerra o programa se uma imagem não for encontrada
+            }
+
+            ImageIcon imgCartaIcone = new ImageIcon(resourceUrl);
+            Image imagemRedimensionada = imgCartaIcone.getImage().getScaledInstance(larguraCartao, alturaCartao, Image.SCALE_SMOOTH);
+            imgCartaIcone = new ImageIcon(imagemRedimensionada);
+
             conjuntoDeCartas.add(new Cartas(nomeCarta, imgCartaIcone));
-        });
+            conjuntoDeCartas.add(new Cartas(nomeCarta, imgCartaIcone));
+        }
 
-        Image versoCartao = new ImageIcon(Objects.requireNonNull(getClass().getResource("imgHardExternos/fundo.jpg"))).getImage();
-        versoDaCartaIcone = new ImageIcon(versoCartao.getScaledInstance(larguraCartao, alturaCartao, java.awt.Image.SCALE_SMOOTH));
+        String caminhoVerso = "/imgHardExternos/fundo.jpg";
+        java.net.URL versoUrl = getClass().getResource(caminhoVerso);
+
+        if (versoUrl == null) {
+            JOptionPane.showMessageDialog(null, "Imagem do verso da carta não encontrada!", "Erro", JOptionPane.ERROR_MESSAGE);
+            System.exit(1); // Encerra o programa se a imagem do verso não for encontrada
+        }
+
+        ImageIcon versoIcone = new ImageIcon(versoUrl);
+        Image versoRedimensionado = versoIcone.getImage().getScaledInstance(larguraCartao, alturaCartao, Image.SCALE_SMOOTH);
+        versoDaCartaIcone = new ImageIcon(versoRedimensionado);
     }
 
     void embaralharCartas() {
@@ -284,9 +300,13 @@ public class HardwareExterno extends JFrame{
         try {
             InputStream somStream = getClass().getResourceAsStream(caminho);
             if (somStream == null) {
-                throw new IllegalArgumentException("Arquivo de áudio não encontrado: " + caminho);
+                JOptionPane.showMessageDialog(this, "Arquivo de áudio não encontrado: " + caminho, "Erro", JOptionPane.ERROR_MESSAGE);
+                return;
             }
-            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(somStream);
+
+            // Usa BufferedInputStream para suportar mark/reset
+            BufferedInputStream bufferedStream = new BufferedInputStream(somStream);
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(bufferedStream);
 
             Clip clip = AudioSystem.getClip();
             clip.open(audioInputStream);

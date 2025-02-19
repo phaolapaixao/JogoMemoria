@@ -3,6 +3,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Objects;
@@ -221,9 +222,13 @@ public class Charada extends JFrame {
         try {
             InputStream somStream = getClass().getResourceAsStream(caminho);
             if (somStream == null) {
-                throw new IllegalArgumentException("Arquivo de áudio não encontrado: " + caminho);
+                JOptionPane.showMessageDialog(this, "Arquivo de áudio não encontrado: " + caminho, "Erro", JOptionPane.ERROR_MESSAGE);
+                return;
             }
-            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(somStream);
+
+            // Usa BufferedInputStream para suportar mark/reset
+            BufferedInputStream bufferedStream = new BufferedInputStream(somStream);
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(bufferedStream);
 
             Clip clip = AudioSystem.getClip();
             clip.open(audioInputStream);

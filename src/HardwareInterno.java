@@ -1,11 +1,11 @@
 import java.awt.*;
 import java.awt.event.*;
+import java.io.BufferedInputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.stream.IntStream;
 import javax.swing.*;
-import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import javax.sound.sampled.*;
@@ -68,11 +68,12 @@ public class HardwareInterno extends JFrame {
         configurarExplicacoes();
 
         janela.setLayout(new BorderLayout());
-        janela.setSize(largura, altura);
-        janela.setLocationRelativeTo(null);
+        //janela.setSize(largura, altura);
+        //janela.setLocationRelativeTo(null);
+        janela.setBounds(300, 0, largura, altura);
         janela.setResizable(false);
         janela.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        janela.setAlwaysOnTop(true);
+        // janela.setAlwaysOnTop(true); // Remova esta linha
 
         texto.setFont(new Font("Arial", Font.PLAIN, 20));
         texto.setHorizontalAlignment(JLabel.CENTER);
@@ -92,12 +93,8 @@ public class HardwareInterno extends JFrame {
             titulo.setOpaque(true);
             titulo.setIcon(conjuntoDeCartas.get(i).imgCartaIcone);
             titulo.setFocusable(false);
-            titulo.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    if (!jogoPronto) {
-                        return;
-                    }
+            titulo.addActionListener(e -> {
+                if (!jogoPronto) return;
                 if (titulo.getIcon() == versoDaCartaIcone) {
                     if (carta1Selecionada == null) {
                         carta1Selecionada = titulo;
@@ -135,7 +132,6 @@ public class HardwareInterno extends JFrame {
                             reiniciarBotao.setEnabled(true);
                         }
                     }
-                }
                 }
             });
             quadro.add(titulo);
@@ -187,6 +183,10 @@ public class HardwareInterno extends JFrame {
         tempoDecorar = new Timer(5000, e -> tempoDecorar());
         tempoDecorar.setRepeats(false);
         tempoDecorar.start();
+
+        janela.pack();
+        janela.setVisible(true);
+        System.out.println("Janela exibida com sucesso!"); // Depuração
     }
 
     private void tempoDecorar() {
@@ -207,37 +207,31 @@ public class HardwareInterno extends JFrame {
     void configuracoesCartao() {
         conjuntoDeCartas = new ArrayList<>();
         for (String nomeCarta : ListaDeCartas) {
-            // Carrega a imagem usando o caminho do recurso
             String caminhoImagem = "/imgHardInternos/" + nomeCarta + ".png";
             java.net.URL resourceUrl = getClass().getResource(caminhoImagem);
 
             if (resourceUrl == null) {
-                System.err.println("Imagem não encontrada: " + nomeCarta);
-                continue; // Pula esta carta se a imagem não for encontrada
+                JOptionPane.showMessageDialog(null, "Imagem não encontrada: " + nomeCarta, "Erro", JOptionPane.ERROR_MESSAGE);
+                System.exit(1); // Encerra o programa se uma imagem não for encontrada
             }
 
-            // Cria o ImageIcon diretamente a partir do URL do recurso
             ImageIcon imgCartaIcone = new ImageIcon(resourceUrl);
-            // Redimensiona a imagem para o tamanho desejado
             Image imagemRedimensionada = imgCartaIcone.getImage().getScaledInstance(larguraCartao, alturaCartao, Image.SCALE_SMOOTH);
             imgCartaIcone = new ImageIcon(imagemRedimensionada);
 
-            // Adiciona a carta ao conjunto de cartas (duas vezes, pois são pares)
             conjuntoDeCartas.add(new Cartas(nomeCarta, imgCartaIcone));
             conjuntoDeCartas.add(new Cartas(nomeCarta, imgCartaIcone));
         }
 
-        // Carrega a imagem do verso da carta
         String caminhoVerso = "/imgHardInternos/bfundo.png";
         java.net.URL versoUrl = getClass().getResource(caminhoVerso);
 
         if (versoUrl == null) {
-            throw new RuntimeException("Imagem do verso da carta não encontrada!");
+            JOptionPane.showMessageDialog(null, "Imagem do verso da carta não encontrada!", "Erro", JOptionPane.ERROR_MESSAGE);
+            System.exit(1); // Encerra o programa se a imagem do verso não for encontrada
         }
 
-        // Cria o ImageIcon diretamente a partir do URL do recurso
         ImageIcon versoIcone = new ImageIcon(versoUrl);
-        // Redimensiona a imagem para o tamanho desejado
         Image versoRedimensionado = versoIcone.getImage().getScaledInstance(larguraCartao, alturaCartao, Image.SCALE_SMOOTH);
         versoDaCartaIcone = new ImageIcon(versoRedimensionado);
     }
@@ -278,9 +272,13 @@ public class HardwareInterno extends JFrame {
         try {
             InputStream somStream = getClass().getResourceAsStream(caminho);
             if (somStream == null) {
-                throw new IllegalArgumentException("Arquivo de áudio não encontrado: " + caminho);
+                JOptionPane.showMessageDialog(this, "Arquivo de áudio não encontrado: " + caminho, "Erro", JOptionPane.ERROR_MESSAGE);
+                return;
             }
-            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(somStream);
+
+            // Usa BufferedInputStream para suportar mark/reset
+            BufferedInputStream bufferedStream = new BufferedInputStream(somStream);
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(bufferedStream);
 
             Clip clip = AudioSystem.getClip();
             clip.open(audioInputStream);
